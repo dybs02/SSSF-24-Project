@@ -30,10 +30,13 @@
     </div>
   </div>
 
+  <Comments review_id="1" />
+
 </template>
 
 
 <script setup lang="ts">
+import Comments from "@/components/Comments.vue";
 
 </script>
 
