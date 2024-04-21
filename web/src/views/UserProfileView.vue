@@ -33,11 +33,15 @@
     </div>
   </div>
 
+  <UserQuiz />
+  <div class="h-20"></div>
+
 
 </template>
 
 <script setup lang="ts">
 import CompactReview from '@/components/CompactReview.vue'
+import UserQuiz from '@/components/UserQuiz.vue'
 
 
 </script>
