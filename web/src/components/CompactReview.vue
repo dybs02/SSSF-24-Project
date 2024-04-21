@@ -1,6 +1,6 @@
 <template>
   <!-- TODO add placeholder values for when data is requested ??? -->
-  <div class="w-full bg-gray-900 text-gray-300">
+  <div class="w-full bg-gray-900 text-gray-300 select-none cursor-pointer" @click="openReview">
     <div>
       <img :src="props.image_url" alt="Album cover" class="" />
     </div>
@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+import router from '@/router';
 
 const props = defineProps({
   image_url: {
@@ -36,6 +37,10 @@ const props = defineProps({
     required: true
   }
 });
+
+const openReview = () => {
+  router.push({ name: 'review', params: { id: 1 } });
+}
 
 </script>
 

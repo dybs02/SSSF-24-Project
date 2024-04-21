@@ -10,7 +10,7 @@
           <a href="/">Home</a>
         </div>
         <div class="text-white">
-          <a href="/profile">Profile</a>
+          <a href="/user/123">Profile</a>
         </div>
       </div>
       <div class="flex-1 md:max-w-lg">
