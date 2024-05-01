@@ -1,6 +1,9 @@
 import {NextFunction, Request, Response} from 'express';
+import jwt from 'jsonwebtoken';
 import ErrorResponse from './interfaces/ErrorResponse';
 import CustomError from './classes/CustomError';
+import { UserOutput } from './interfaces/User';
+import { GraphQLError } from 'graphql';
 
 
 const notFound = (req: Request, res: Response, next: NextFunction) => {
@@ -22,4 +25,29 @@ const errorHandler = (
   });
 };
 
-export {notFound, errorHandler};
+const authenticate = async (
+  req: Request,
+  res: Response,
+  token: string
+) => {
+  try {
+    if (!token) {
+      throw new Error('No jwt provided');
+    }
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT secret not set');
+    }
+
+    const tokenContent = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    ) as UserOutput;
+
+    res.locals.user = tokenContent;
+  } catch (error) {
+    throw new Error('Not authorized');
+  }
+};
+
+export {notFound, errorHandler, authenticate};

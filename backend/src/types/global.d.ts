@@ -8,5 +8,8 @@ declare global {
       user_name: string;
       _id: Types.ObjectId;
     }
+    interface CustomError {
+      message: string;
+    }
   }
 }

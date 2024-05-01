@@ -5,7 +5,7 @@ import { userCurrentGet } from '../controllers/userController';
 const router = express.Router();
 
 router
-  .route('/')
+  .route('/current')
   .get(authenticate, userCurrentGet);
 
 export default router;

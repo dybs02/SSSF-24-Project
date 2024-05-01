@@ -1,10 +1,17 @@
 import { User } from "../../interfaces/User";
+import { authenticate } from "../../middlewares";
 import userModel from "../models/userModel";
+import CustomError from "../../classes/CustomError";
 
 
 export default {
   Query: {
-    users: async (): Promise<User[]> => {
+    users: async (
+      _parent: any,
+      _args: any, 
+      context: any
+    ): Promise<User[] | CustomError> => {
+      await authenticate(context.req, context.res, context.jwt);
       return await userModel.find();
     },
     userById: async (

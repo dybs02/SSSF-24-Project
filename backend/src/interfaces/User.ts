@@ -11,4 +11,12 @@ interface UserTest {
   email?: string;
 }
 
-export {User, UserTest};
+type UserOutput = {
+  display_name: string;
+  avatar_url: string;
+  spotify_id: string;
+  email: string;
+  country: string;
+};
+
+export {User, UserTest, UserOutput};

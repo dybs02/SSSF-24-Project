@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get<{}, MessageResponse>('/', (req, res) => {
   res.json({
-    message: 'routes: upload',
+    message: 'routes:',
   });
 });
 

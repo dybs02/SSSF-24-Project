@@ -46,16 +46,9 @@ const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      next(new CustomError('No auth header provided', 401));
-      return;
-    }
-    // we are using a bearer token
-    const token = authHeader.split(' ')[1];
-
-    if (!token) {
-      next(new CustomError('No token provided', 401));
+    const jwtCookie = req.cookies.jwt;
+    if (!jwtCookie) {
+      next(new CustomError('No jwt provided', 401));
       return;
     }
 
@@ -65,7 +58,7 @@ const authenticate = async (
     }
 
     const tokenContent = jwt.verify(
-      token,
+      jwtCookie,
       process.env.JWT_SECRET
     ) as UserOutput;
 

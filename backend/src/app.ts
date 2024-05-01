@@ -12,11 +12,14 @@ import {
   ApolloServerPluginLandingPageProductionDefault,
 } from '@apollo/server/plugin/landingPage/default';
 import {notFound, errorHandler} from './middlewares';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 (async () => {
   try {
+    app.use(cookieParser());
+    app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
     app.use(
       helmet({
         crossOriginEmbedderPolicy: false,
@@ -31,8 +34,9 @@ const app = express();
           ? ApolloServerPluginLandingPageProductionDefault({
               graphRef: 'my-graph-id@my-graph-variant',
               footer: false,
+              includeCookies: true,
             })
-          : ApolloServerPluginLandingPageLocalDefault({footer: false}),
+          : ApolloServerPluginLandingPageLocalDefault({footer: false, includeCookies: true}),
       ],
       includeStacktraceInErrorResponses: false,
     });
@@ -40,9 +44,15 @@ const app = express();
 
     app.use(
       '/graphql',
-      cors<cors.CorsRequest>(),
+      cors<cors.CorsRequest>({ origin: process.env.FRONTEND_URL, credentials: true }),
       express.json(),
-      expressMiddleware(server)
+      expressMiddleware(server, {
+        context: async ({ req, res }) => ({
+          req: req,
+          res: res,
+          jwt: req.cookies.jwt,
+        })
+      })
     );
 
     app.use('/api/v1', api);

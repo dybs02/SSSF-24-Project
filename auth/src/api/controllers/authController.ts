@@ -47,6 +47,20 @@ const login = async (
   }
 }
 
+const logout = async (
+  req: Request<{}, {}, {}>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.clearCookie('jwt', { httpOnly: true });
+    res.clearCookie('user', { httpOnly: true });
+    res.send('logged out');
+  } catch (error) {
+    next(error);
+  }
+}
+
 const callback = async (
   req: Request<{}, {}, {}>,
   res: Response,
@@ -118,12 +132,12 @@ const callback = async (
   
       const token = jwt.sign(tokenContent, JWT_SECRET!);
   
-      // TODO refresh token
-      res.cookie('jwt', token, { httpOnly: true, secure: true });
+      // TODO set normal expiration time + refresh token
+      res.cookie('jwt', token, { httpOnly: true, secure: true, maxAge: 7*24*60*60*1000 });
       res.redirect(FRONTEND_URL!);
     });
   });
 }
 
 
-export {login, callback};
+export {login, logout, callback};
