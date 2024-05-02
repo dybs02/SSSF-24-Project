@@ -6,6 +6,14 @@
         <a href="/">Musicboxd</a>
       </div>
       <div class="hidden md:flex space-x-4 ml-4">
+        <div class="text-white pr-16">
+          <div v-if="store.isSignedIn">
+            <a @click="logout" href="/">LOGOUT</a>
+          </div>
+          <div v-else>
+            <a href="http://localhost:3001/api/v1/auth/login/spotify">LOGIN</a>
+          </div>
+        </div>
         <div class="text-white">
           <a href="/">Home</a>
         </div>
@@ -22,8 +30,19 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/authStore';
 import SearchBar from './SearchBar.vue'
+import axios from 'axios';
 
+const store = useAuthStore();
+
+const logout = async () => {
+  const res = await axios.get(
+    'http://localhost:3001/api/v1/auth/logout',
+    { withCredentials: true }
+  )
+  store.clearStorage();
+}
 </script>
 
 <style scoped>
