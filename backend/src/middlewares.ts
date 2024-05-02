@@ -30,6 +30,15 @@ const authenticate = async (
   res: Response,
   token: string
 ) => {
+  // res.locals.user = {
+  //   _id: '662e369a71a91357d5607cd6',
+  //   display_name: 'test',
+  //   avatar_url: 'test',
+  //   spotify_id: 'test',
+  //   email: 'test',
+  //   country: 'test',
+  // } as UserOutput;
+  // return;
   try {
     if (!token) {
       throw new Error('No jwt provided');

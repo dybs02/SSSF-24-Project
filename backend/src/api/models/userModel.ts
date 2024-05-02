@@ -1,13 +1,19 @@
-// mongoose schema for user
-// intface User is located in src/interfaces/User.ts
-
 import mongoose from 'mongoose';
-import {User} from '../../interfaces/User';
+import { User } from '../../interfaces/User';
 
-const userModel = new mongoose.Schema<User>({
-  user_name: {
+
+const userSchema = new mongoose.Schema<User>({
+  display_name: {
     type: String,
-    required: true,
+    reqired: true,
+  },
+  avatar_url: {
+    type: String,
+    reqired: true,
+  },
+  spotify_id: {
+    type: String,
+    reqired: true,
     unique: true,
   },
   email: {
@@ -15,6 +21,18 @@ const userModel = new mongoose.Schema<User>({
     required: true,
     unique: true,
   },
+  country: {
+    type: String,
+    required: true,
+  },
+  access_token: {
+    type: String,
+    reqired: true,
+  },
+  refresh_token: {
+    type: String,
+    reqired: true,
+  },
 });
 
-export default mongoose.model<User>('User', userModel);
+export default mongoose.model<User>('User', userSchema);

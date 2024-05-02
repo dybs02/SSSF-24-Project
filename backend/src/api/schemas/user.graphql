@@ -1,16 +1,18 @@
 type User {
-  id: ID
-  user_name: String
+  _id: ID
+  display_name: String
+  avatar_url: String
+  spotify_id: String
   email: String
+  country: String
 }
 
 type Query {
-  users: [User]
+  userCurrent: User
   userById(id: ID!): User
 }
 
-type Mutation {
-  createUser(user_name: String!, email: String!): User
-  updateUser(user_name: String, id: ID!): User
-  deleteUser(id: ID!): User
-}
+# TODO idk if i ever need this
+# type Mutation {
+#   updateUser(): User
+# }

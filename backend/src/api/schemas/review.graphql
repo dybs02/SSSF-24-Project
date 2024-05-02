@@ -3,7 +3,7 @@ scalar DateTime
 
 type Review {
   id: ID
-  author: Author
+  author: User
   album_id: String
   title: String
   content: String
@@ -11,14 +11,17 @@ type Review {
   comments: [ReviewComment]
 }
 
-type Author {
+type UnpopulatedReview {
   id: ID
-  user_name: String
-  email: String
+  author: String
+  album_id: String
+  title: String
+  content: String
+  rating: Int
 }
 
 type ReviewComment {
-  author: Author
+  author: User
   content: String
   date: DateTime
 }
@@ -30,8 +33,8 @@ type Query {
 }
 
 type Mutation {
-  createReview(author: String!, album_id: String!, title: String!, content: String!, rating: Int!): Review
-  createReviewComment(review_id: ID!, author_id: ID!, content: String!): ReviewComment
+  createReview(album_id: String!, title: String!, content: String!, rating: Int!): Review
+  createReviewComment(review_id: ID!, content: String!): ReviewComment
   updateReview(id: ID!, title: String, content: String, rating: Int): Review
-  deleteReview(id: ID!): Review
+  deleteReview(id: ID!): UnpopulatedReview
 }
