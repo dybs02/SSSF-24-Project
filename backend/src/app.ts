@@ -16,6 +16,13 @@ import cookieParser from 'cookie-parser';
 
 const app = express();
 
+const requestLogger = {
+  async requestDidStart(requestContext: any) {
+    console.log('Request started! Query:\n' + requestContext.request.query);
+    return;
+  },
+};
+
 (async () => {
   try {
     app.use(cookieParser());
@@ -37,6 +44,7 @@ const app = express();
               includeCookies: true,
             })
           : ApolloServerPluginLandingPageLocalDefault({footer: false, includeCookies: true}),
+          requestLogger
       ],
       includeStacktraceInErrorResponses: false,
     });

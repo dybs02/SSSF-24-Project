@@ -3,11 +3,11 @@
   <div class="flex pb-10">
     <div class="w-1/3 flex items-center justify-center">
       <div class="rounded-full overflow-hidden h-48 w-48">
-        <img src="https://picsum.photos/200/300" alt="User avatar" class="object-cover w-full h-full" />
+        <img :src="currentUser.avatar_url" alt="User avatar" class="object-cover w-full h-full" />
       </div>
     </div>
     <div class="w-2/3 flex flex-col justify-center text-white pl-10">
-      <h1 class="text-2xl">Username</h1>
+      <h1 class="text-2xl">{{ currentUser.display_name }}</h1>
       <p>Joined: 2021-10-01</p>
       <p>Reviews: 5</p>
     </div>
@@ -38,6 +38,23 @@
 
 <script setup lang="ts">
 import CompactReview from '@/components/CompactReview.vue'
+import { useQuery } from '@vue/apollo-composable'
+import { gql } from "@apollo/client/core";
+import { computed } from 'vue';
+
+const { result } = useQuery(gql`
+  query UserCurrent {
+    userCurrent {
+      _id
+      display_name
+      avatar_url
+      spotify_id
+      email
+      country
+    }
+  } 
+`)
+const currentUser = computed(() => result.value?.userCurrent ?? {})
 
 
 </script>
