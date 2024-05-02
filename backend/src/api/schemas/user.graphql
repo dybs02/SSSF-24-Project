@@ -1,0 +1,18 @@
+type User {
+  _id: ID
+  display_name: String
+  avatar_url: String
+  spotify_id: String
+  email: String
+  country: String
+}
+
+type Query {
+  userCurrent: User
+  userById(id: ID!): User
+}
+
+# TODO idk if i ever need this
+# type Mutation {
+#   updateUser(): User
+# }

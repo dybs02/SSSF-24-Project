@@ -1,0 +1,12 @@
+type SpotifyAlbum {
+  id: ID
+  name: String
+  artist: String
+  image: String
+}
+
+type Query {
+  spotifyAlbumsByQuery(query: String!): [SpotifyAlbum]
+  spotifyAlbumById(id: ID!): SpotifyAlbum
+}
+

@@ -1,0 +1,40 @@
+scalar DateTime
+  @specifiedBy(url: "https://scalars.graphql.org/andimarek/date-time")
+
+type Review {
+  id: ID
+  author: User
+  album_id: String
+  title: String
+  content: String
+  rating: Int
+  comments: [ReviewComment]
+}
+
+type UnpopulatedReview {
+  id: ID
+  author: String
+  album_id: String
+  title: String
+  content: String
+  rating: Int
+}
+
+type ReviewComment {
+  author: User
+  content: String
+  date: DateTime
+}
+
+type Query {
+  reviewById(id: ID!): Review
+  reviewsByAlbumId(album_id: String!): [Review]
+  reviewsByUserId(user_id: ID!): [Review]
+}
+
+type Mutation {
+  createReview(album_id: String!, title: String!, content: String!, rating: Int!): Review
+  createReviewComment(review_id: ID!, content: String!): ReviewComment
+  updateReview(id: ID!, title: String, content: String, rating: Int): Review
+  deleteReview(id: ID!): UnpopulatedReview
+}

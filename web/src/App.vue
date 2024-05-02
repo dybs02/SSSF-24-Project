@@ -1,5 +1,7 @@
 <template>
 
+  <a href="http://localhost:3001/api/v1/auth/login/spotify">LOGIN</a>
+  <button>LOGOUT</button>
   <TopBar />
 
   <div class="flex justify-center">
