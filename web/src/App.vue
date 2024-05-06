@@ -4,7 +4,7 @@
 
   <div class="flex justify-center">
     <div class="w-2/3 bg-gray-800 pt-7">
-      <RouterView :key="$route.fullPath" />
+      <RouterView v-once :key="$route.fullPath" />
     </div>
   </div>
 

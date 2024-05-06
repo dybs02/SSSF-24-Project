@@ -28,6 +28,10 @@ const reviewModel = new mongoose.Schema<Review>({
     ref: 'ReviewComment',
     required: true,
   },
+  date: {
+    type: Date,
+    required: true,
+  },
 });
 
 export default mongoose.model<Review>('Review', reviewModel);

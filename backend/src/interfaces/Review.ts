@@ -9,6 +9,13 @@ interface Review extends Document {
   content: String
   rating: Number
   comments: [Types.ObjectId | ReviewComment]
+  date: Date
+  album: {
+    id: String
+    name: String
+    artist: String
+    image: String
+  }
 }
 
 export {Review};

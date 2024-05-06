@@ -1,6 +1,7 @@
 import { Review } from "../../interfaces/Review";
 import { ReviewComment } from "../../interfaces/ReviewComment";
 import { authenticate } from "../../middlewares";
+import { getAlbumById } from "../../utils/spotify";
 import reviewCommentModel from "../models/reviewCommentModel";
 import reviewModel from "../models/reviewModel";
 
@@ -28,6 +29,41 @@ export default {
       if (!review) {
         throw new Error('Review not found');
       }
+
+      const album = await getAlbumById(review.album_id as string);
+      review.album = {
+        id: album.data.id,
+        name: album.data.name,
+        artist: album.data.artists[0].name,
+        image: album.data.images[0].url,
+      }
+
+      return review;
+    },
+    reviewByAlbumId: async (
+      _parent: undefined,
+      args: { album_id: string },
+      context: any
+    ): Promise<Review> => {
+      await authenticate(context.req, context.res, context.jwt);
+      const review = await reviewModel.findOne({album_id: args.album_id, author: context.res.locals.user._id})
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User',
+          select: '-access_token -refresh_token -__v'
+        }
+      })
+      .populate({
+        path: 'author',
+        model: 'User',
+        select: '-access_token -refresh_token -__v'
+      });
+      if (!review) {
+        throw new Error('Review not found');
+      }
+
       return review;
     },
     reviewsByAlbumId: async (
@@ -91,7 +127,8 @@ export default {
         title: args.title,
         content: args.content,
         rating: args.rating,
-        comments: []
+        comments: [],
+        date: new Date()
       });
       const populatedReview = await reviewModel
         .findById(review._id)
@@ -171,7 +208,7 @@ export default {
       const updatedReview = await reviewModel
       .findByIdAndUpdate(
         args.id,
-        args,
+        {...args, date: new Date()},
         { new: true }, 
       )
       .populate({

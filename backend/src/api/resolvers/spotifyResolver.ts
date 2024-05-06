@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { getAlbumById, getAlbumsByQuery } from '../../utils/spotify';
 
 export default {
   Query: {
@@ -6,14 +6,7 @@ export default {
       _parent: undefined,
       args: { query: string },
     ) => {
-      const reqOptions = {
-        method: 'get',
-        url: `https://api.spotify.com/v1/search?q=${args.query}&type=album&market=FI&limit=10`,
-        headers: {
-          'Authorization': `Bearer ${process.env.SPOTIFY_ACCESS_TOKEN}`,
-        }
-      }
-      const response = await axios(reqOptions);
+      const response = await getAlbumsByQuery(args.query);
 
       return response.data.albums.items.map((album: any) => {
         return {
@@ -28,16 +21,10 @@ export default {
       _parent: undefined,
       args: { id: string },
     ) => {
-      const reqOptions = {
-        method: 'get',
-        url: `https://api.spotify.com/v1/albums/${args.id}`,
-        headers: {
-          'Authorization': `Bearer ${process.env.SPOTIFY_ACCESS_TOKEN}`,
-        }
-      }
-      const response = await axios(reqOptions);
+      const response = await getAlbumById(args.id);
 
       const album = response.data;
+      console.log(album);
       return {
         id: album.id,
         name: album.name,

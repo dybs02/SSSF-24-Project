@@ -6,10 +6,10 @@
         <img :src="album.image" alt="Album cover" class="object-contain w-full self-start w-80" />
       </div>
       
-      <div class="flex-grow ml-8">
+      <div class="flex-grow ml-8 overflow-hidden" id="huj">
         <div class="lg:flex block">
           <div>
-            <div class="truncate text-5xl font-bold max-w-lg">{{ album.name }}</div>
+            <div class="truncate text-5xl pb-4 font-bold">{{ album.name }}</div>
             <div class="truncate text-2xl">{{ album.artist }}</div>
           </div>
         </div>
@@ -21,7 +21,7 @@
       <div class="text-3xl font-bold pb-2">
         Write your review
       </div>
-      <v-form @submit.prevent="submit">
+      <v-form @submit.prevent="">
         <div>
           <v-rating
             v-model="formData.rating"
@@ -46,10 +46,20 @@
             required
           ></v-textarea>
         </div>
-        <v-btn
-          type="submit"
-          variant="tonal"
-          >Post review</v-btn>
+        <div v-if="isReviewed">
+          <v-btn
+            @click="update"
+            type="submit"
+            variant="tonal"
+            >Edit review</v-btn>
+        </div>
+        <div v-else>
+          <v-btn
+            @click="submit"
+            type="submit"
+            variant="tonal"
+            >Post review</v-btn>
+        </div>
       </v-form>
     </div>
 
@@ -80,15 +90,42 @@ const { result } = useQuery(gql`
 })
 const album = computed(() => result.value?.spotifyAlbumById ?? {})
 
+const { result: reviewResult, onResult: onReviewResult } = useQuery(gql`
+  query ReviewByAlbumId($albumId: String!) {
+    reviewByAlbumId(album_id: $albumId) {
+      id
+      rating
+      title
+      content
+      album_id
+    }
+  }
+`, {
+  albumId: route.params.id
+}, {
+  fetchPolicy: 'no-cache'
+})
 
+const review = computed(() => reviewResult.value?.reviewByAlbumId)
+const isReviewed = computed(() => reviewResult.value?.reviewByAlbumId !== undefined)
 const formData = ref({
   albumId: route.params.id,
+  updateReviewId: '',
   title: '',
   content: '',
   rating: 0,
 });
 
-const { mutate: postReview, onDone } = useMutation(gql`
+onReviewResult(queryResult => {
+  console.log(queryResult.data.reviewByAlbumId)
+  formData.value.content = queryResult.data.reviewByAlbumId.content;
+  formData.value.title = queryResult.data.reviewByAlbumId.title;
+  formData.value.rating = queryResult.data.reviewByAlbumId.rating;
+  formData.value.updateReviewId = queryResult.data.reviewByAlbumId.id;
+  console.log(formData.value)
+})
+
+const { mutate: postReview, onDone: onPostDone } = useMutation(gql`
     mutation CreateReview($albumId: String!, $title: String!, $content: String!, $rating: Float!) {
       createReview(album_id: $albumId, title: $title, content: $content, rating: $rating) {
         id
@@ -97,12 +134,30 @@ const { mutate: postReview, onDone } = useMutation(gql`
   `, { variables: formData.value }
 )
 
+const { mutate: updateReview, onDone: onUpdateDone } = useMutation(gql`
+    mutation UpdateReview($updateReviewId: ID!, $title: String, $content: String, $rating: Float) {
+      updateReview(id: $updateReviewId, title: $title, content: $content, rating: $rating) {
+        id
+      }
+    }
+  `, { variables: formData.value }
+)
+
+
 
 const submit = () => {
   postReview();
-  onDone(result => {
-    router.push({ name: 'review', params: { id: result.data.createReview.id } })
+  onPostDone(result => {
+    router.push({ name: 'review', params: { id: result.data.createReview.id }, query: { _r: Date.now() } })
     console.log('Review posted!')
+  })
+}
+
+const update = () => {
+  updateReview();
+  onUpdateDone(result => {
+    router.push({ name: 'review', params: { id: result.data.updateReview.id }, query: { _r: Date.now() } })
+    console.log('Review updated!')
   })
 }
 

@@ -5,14 +5,14 @@
     Comments
   </div>
 
-  <div v-for="c in comments" class="p-2 px-4 mx-14 my-2 bg-gray-600">
+  <div v-for="c in comments_cpy" class="p-2 px-4 mx-14 my-2 bg-gray-600">
     <div class="flex">
       <div class="rounded-full overflow-hidden h-12 w-12">
-        <img src="https://picsum.photos/200/300" alt="User avatar" class="object-cover w-full h-full" />
+        <img :src="c.author.avatar_url" alt="User avatar" class="object-cover w-full h-full" />
       </div>
       <div class="ml-4">
-        <div class="text-lg font-bold">{{ c.username }}</div>
-        <div class="text-xs text-gray-400">{{ c.created_at }}</div>
+        <div class="text-lg font-bold">{{ c.author.display_name }}</div>
+        <div class="text-xs text-gray-400">{{ c.date }}</div>
       </div>
 
       <div class="pl-8 pt-2"> 
@@ -22,36 +22,79 @@
   </div>
 
   <div class="px-14 pt-8 pb-2 ">
-    <textarea class="w-full h-24 bg-gray-600 p-2" placeholder="Add a comment..."></textarea>
-    <button class="bg-gray-700 text-white p-2">Submit</button>
+    <v-form @submit.prevent="submit">
+      <v-textarea
+        v-model="formData.content"
+        placeholder="Add a comment..."
+        rows="2"
+        required
+      ></v-textarea>
+      <v-btn
+        type="submit"
+        variant="tonal"
+      >Post comment</v-btn>
+    </v-form>
   </div>
 </div>
 
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { useQuery, useMutation } from '@vue/apollo-composable'
+import { gql } from "@apollo/client/core";
+
+
+type Comment = {
+  author: {
+    avatar_url: string;
+    _id: string;
+    display_name: string;
+  };
+  content: string;
+  date: Date;
+};
 
 const props = defineProps({
-  review_id: {
-    type: String,
+  comments: {
+    type: Array<Comment>,
     required: true
   }
 });
 
-const comments = [
-  {
-    id: 1,
-    username: "Lexie",
-    content: "This is a comment",
-    created_at: "2022-11-03"
-  },
-  {
-    id: 2,
-    username: "Jimmy",
-    content: "This is another comment",
-    created_at: "2022-11-04"
+const comments_cpy = ref([...props.comments]);
+
+const route = useRoute();
+const formData = ref({
+  reviewId: route.params.id,
+  content: '',
+});
+
+
+const { mutate: postComment, onDone } = useMutation(gql`
+  mutation CreateReviewComment($reviewId: ID!, $content: String!) {
+    createReviewComment(review_id: $reviewId, content: $content) {
+      author {
+        display_name
+        avatar_url
+        _id
+      }
+      content
+      date
+    }
   }
-];
+  `, { variables: formData.value }
+)
+
+
+const submit = () => {
+  postComment();
+  onDone(result => {
+    formData.value.content = '';
+    comments_cpy.value.push(result.data.createReviewComment);
+  })
+};
 
 </script>
 

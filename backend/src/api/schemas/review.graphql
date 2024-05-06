@@ -9,6 +9,19 @@ type Review {
   content: String
   rating: Float
   comments: [ReviewComment]
+  date: DateTime
+}
+
+type ReviewWithAlbum {
+  id: ID
+  author: User
+  album_id: String
+  album: SpotifyAlbum
+  title: String
+  content: String
+  rating: Float
+  comments: [ReviewComment]
+  date: DateTime
 }
 
 type UnpopulatedReview {
@@ -18,6 +31,7 @@ type UnpopulatedReview {
   title: String
   content: String
   rating: Float
+  date: DateTime
 }
 
 type ReviewComment {
@@ -27,7 +41,8 @@ type ReviewComment {
 }
 
 type Query {
-  reviewById(id: ID!): Review
+  reviewById(id: ID!): ReviewWithAlbum
+  reviewByAlbumId(album_id: String!): Review
   reviewsByAlbumId(album_id: String!): [Review]
   reviewsByUserId(user_id: ID!): [Review]
 }
