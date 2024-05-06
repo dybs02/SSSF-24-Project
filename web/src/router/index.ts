@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import UserProfileView from '@/views/UserProfileView.vue'
 import ReviewView from '@/views/ReviewView.vue'
 import CallbackView from '@/views/auth/CallbackView.vue'
+import AlbumView from '@/views/AlbumView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,11 @@ const router = createRouter({
       path: '/review/:id',
       name: 'review',
       component: ReviewView
+    },
+    {
+      path: '/album/:id',
+      name: 'album',
+      component: AlbumView
     },
     {
       path: '/auth-callback',
