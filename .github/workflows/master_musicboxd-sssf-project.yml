@@ -55,8 +55,12 @@ jobs:
         with:
           name: node-app
 
+      - name: List directory contents
+        run: ls -la
+        run: ls -la ./web
+
       - name: Unzip artifact for deployment
-        working-directory: ./web
+        # working-directory: ./web
         run: unzip release.zip
       
       - name: Login to Azure
