@@ -111,6 +111,80 @@ export default {
       throw new Error('Review not found');
     }
     return reviews;
+    },
+    reviewsMostRecent: async (
+      _parent: undefined,
+      args: { limit: number },
+    ): Promise<Review[]> => {
+      const reviews = await reviewModel.find()
+      .sort({ _id: -1 })
+      .limit(args.limit > 10 ? 10 : args.limit)
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User',
+          select: '-access_token -refresh_token -__v'
+        }
+      })
+      .populate({
+        path: 'author',
+        model: 'User',
+        select: '-access_token -refresh_token -__v'
+      });
+      if (!reviews) {
+        throw new Error('Reviews not found');
+      }
+
+      for (const review of reviews) {
+        const album = await getAlbumById(review.album_id as string);
+        review.album = {
+          id: album.data.id,
+          name: album.data.name,
+          artist: album.data.artists.map((artist: any) => artist.name).join(", "),
+          image: album.data.images[0].url,
+        }
+      }
+
+      return reviews;
+    },
+    reviewsMostRecentCurrnetUser: async (
+      _parent: undefined,
+      args: { limit: number },
+      context: any,
+    ): Promise<Review[]> => {
+      await authenticate(context.req, context.res, context.jwt);
+      const reviews = await reviewModel.find({ author: context.res.locals.user._id })
+      .sort({ _id: -1 })
+      .limit(args.limit > 10 ? 10 : args.limit)
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User',
+          select: '-access_token -refresh_token -__v'
+        }
+      })
+      .populate({
+        path: 'author',
+        model: 'User',
+        select: '-access_token -refresh_token -__v'
+      });
+      if (!reviews) {
+        throw new Error('Reviews not found');
+      }
+
+      for (const review of reviews) {
+        const album = await getAlbumById(review.album_id as string);
+        review.album = {
+          id: album.data.id,
+          name: album.data.name,
+          artist: album.data.artists.map((artist: any) => artist.name).join(", "),
+          image: album.data.images[0].url,
+        }
+      }
+
+      return reviews;
     }
   },
   Mutation: {

@@ -28,6 +28,12 @@
               readonly
             ></v-rating>
           </div>
+          <div class="flex">
+            <div>
+              <img :src="review.author.avatar_url" alt="User avatar" class="w-8 h-8 rounded-full" />
+            </div>
+            <div class="text-gray-300 justify-center my-auto ml-3 truncate">{{ review.author.display_name }}</div>
+          </div>
         </div>
         <div class="ml-auto text-right">
           <div class="mt-2">Reviewed: {{ (new Date(review.date)).toLocaleDateString("en-GB") }}</div>
