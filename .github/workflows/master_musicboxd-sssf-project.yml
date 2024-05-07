@@ -71,5 +71,5 @@ jobs:
         with:
           app-name: 'musicboxd-sssf-project'
           slot-name: 'Production'
-          package: ./web
+          package: .
           
