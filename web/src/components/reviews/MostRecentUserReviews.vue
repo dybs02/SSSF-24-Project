@@ -20,7 +20,6 @@ import CompactReview from '@/components/reviews/CompactReview.vue'
 import { useQuery } from '@vue/apollo-composable'
 import { gql } from "@apollo/client/core";
 import { computed, ref } from 'vue';
-import { emptyReview } from '@/utils/review';
 
 const { result } = useQuery(gql`
   query ReviewsMostRecentCurrnetUser($limit: Int!) {
