@@ -12,7 +12,7 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: import.meta.env.VITE_BACKEND_URL + '/graphql',
   credentials: 'include',
 });
 
