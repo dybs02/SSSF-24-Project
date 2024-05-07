@@ -1,17 +1,25 @@
 <template>
 
   <div class="w-full bg-gray-900 text-gray-300 flex p-8 px-16">
-    <div class="w-92 flex-shrink-0 flex justify-center items-center">
+    <div class="w-1/3 flex-shrink-0 flex justify-center items-center">
       <img :src="review.album.image" alt="Album cover" class="object-contain w-full self-start w-80" />
     </div>
     
-    <div class="flex-grow ml-8">
+    <div class="flex-none ml-8 w-2/3">
       <div class="lg:flex block">
         <div>
-          <div class="truncate text-5xl font-bold max-w-lg">{{ review.  album.name }}</div>
-          <div class="truncate text-2xl">{{ review.album.artist }}</div>
+          <v-tooltip :text="review.album.name">
+            <template v-slot:activator="{ props }">
+              <div v-bind="props" class="truncate text-5xl font-bold max-w-lg">{{ review.album.name }}</div>
+            </template>
+          </v-tooltip>
+          <v-tooltip :text="review.album.artist">
+            <template v-slot:activator="{ props }">
+              <div v-bind="props" class="truncate text-2xl w-fit">{{ review.album.artist }}</div>
+            </template>
+          </v-tooltip>
           <div>
-            <v-rating
+            <v-rating 
               v-model="review.rating"
               active-color="yellow"
               color="yellow"
@@ -29,10 +37,10 @@
       </div>
 
       <div class="mt-8 p-2 bg-gray-700 rounded">
-        <div class="text-3xl font-bold pb-2">
+        <div class="text-3xl font-bold p-2 overflow-hidden">
           {{ review.title }}
         </div>
-        <div>
+        <div class="bg-gray-500 p-2 rounded" style="white-space: pre;">
           {{ review.content }}
         </div>
       </div>

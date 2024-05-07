@@ -19,7 +19,7 @@
 
     <div class="mt-12 rounded">
       <div class="text-3xl font-bold pb-2">
-        Write your review
+        {{ isReviewed ? 'Edit your review' : 'Write your review' }}
       </div>
       <v-form @submit.prevent="">
         <div>
@@ -52,6 +52,12 @@
             type="submit"
             variant="tonal"
             >Edit review</v-btn>
+          <v-btn
+            class="ml-2"
+            @click="check_review"
+            type="submit"
+            variant="tonal"
+            >See your review</v-btn>
         </div>
         <div v-else>
           <v-btn
@@ -117,12 +123,10 @@ const formData = ref({
 });
 
 onReviewResult(queryResult => {
-  console.log(queryResult.data.reviewByAlbumId)
   formData.value.content = queryResult.data.reviewByAlbumId.content;
   formData.value.title = queryResult.data.reviewByAlbumId.title;
   formData.value.rating = queryResult.data.reviewByAlbumId.rating;
   formData.value.updateReviewId = queryResult.data.reviewByAlbumId.id;
-  console.log(formData.value)
 })
 
 const { mutate: postReview, onDone: onPostDone } = useMutation(gql`
@@ -148,17 +152,19 @@ const { mutate: updateReview, onDone: onUpdateDone } = useMutation(gql`
 const submit = () => {
   postReview();
   onPostDone(result => {
-    router.push({ name: 'review', params: { id: result.data.createReview.id }, query: { _r: Date.now() } })
-    console.log('Review posted!')
+    router.push({ name: 'review', params: { id: result.data.createReview.id } })
   })
 }
 
 const update = () => {
   updateReview();
   onUpdateDone(result => {
-    router.push({ name: 'review', params: { id: result.data.updateReview.id }, query: { _r: Date.now() } })
-    console.log('Review updated!')
+    router.push({ name: 'review', params: { id: result.data.updateReview.id } })
   })
+}
+
+const check_review = () => {
+  router.push({ name: 'review', params: { id: review.value.id } })
 }
 
 </script>

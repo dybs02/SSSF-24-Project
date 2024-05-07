@@ -34,7 +34,7 @@ export default {
       review.album = {
         id: album.data.id,
         name: album.data.name,
-        artist: album.data.artists[0].name,
+        artist: album.data.artists.map((artist: any) => artist.name).join(", "),
         image: album.data.images[0].url,
       }
 

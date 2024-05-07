@@ -5,17 +5,20 @@
     Comments
   </div>
 
-  <div v-for="c in comments_cpy" class="p-2 px-4 mx-14 my-2 bg-gray-600">
+  <div v-for="c in comments_cpy" class="p-2 px-4 mx-14 my-2 bg-gray-600 rounded">
     <div class="flex">
-      <div class="rounded-full overflow-hidden h-12 w-12">
-        <img :src="c.author.avatar_url" alt="User avatar" class="object-cover w-full h-full" />
-      </div>
-      <div class="ml-4">
-        <div class="text-lg font-bold">{{ c.author.display_name }}</div>
-        <div class="text-xs text-gray-400">{{ c.date }}</div>
+      <div class="flex w-48">
+        <div class="rounded-full overflow-hidden flex-none h-12 w-12">
+          <img :src="c.author.avatar_url" alt="User avatar" class="object-cover w-full h-full" />
+        </div>
+        <div class="ml-4 flex-none w-36 overflow-hidden">
+          <div class="text-lg font-bold">{{ c.author.display_name }}</div>
+          <div class="text-xs text-gray-400">{{ (new Date(c.date)).toLocaleDateString("en-GB") }}</div>
+          <div class="text-xs text-gray-400">{{ (new Date(c.date)).toLocaleTimeString("en-GB") }}</div>
+        </div>
       </div>
 
-      <div class="pl-8 pt-2"> 
+      <div class="ml-4 px-4 py-2 w-full bg-gray-500 rounded overflow-hidden"> 
         {{ c.content }}
       </div>
     </div>
@@ -28,6 +31,7 @@
         placeholder="Add a comment..."
         rows="2"
         required
+        @keydown.enter.prevent
       ></v-textarea>
       <v-btn
         type="submit"
@@ -99,6 +103,8 @@ const submit = () => {
 </script>
 
 <style scoped>
-
+/* div {
+  border: 1px solid red;
+} */
 
 </style>

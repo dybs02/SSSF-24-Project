@@ -16,9 +16,12 @@
   </div>
 
   <div v-if="showResults" class="absolute top-0 left-0 z-10 w-full pt-7 mt-1 bg-gray-700 text-white rounded-md rounded-t-lg shadow-lg">
-    <div v-for="result in results" class="hover:bg-gray-600 hover:cursor-pointer px-4 truncate border-t border-gray-600" @click="openReview(result)">
-      <span class="text-gray-100">{{ result.name }}</span>
-      <span class="text-gray-400"> - {{ result.artist }}</span>
+    <div v-for="result in results" class="hover:bg-gray-600 hover:cursor-pointer px-4 truncate border-t border-gray-600 flex py-2 overflow-hidden" @click="openReview(result)">
+      <img :src="result.image" alt="Album cover" class="object-contain w-8 h-8 " />
+      <div class="pl-4 my-auto">
+        <span class="text-gray-100">{{ result.name }}</span>
+        <span class="text-gray-400"> - {{ result.artist }}</span>
+      </div>
     </div>
   </div>
 </div>

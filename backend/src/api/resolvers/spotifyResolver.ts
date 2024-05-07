@@ -12,7 +12,7 @@ export default {
         return {
           id: album.id,
           name: album.name,
-          artist: album.artists[0].name,
+          artist: album.artists.map((artist: any) => artist.name).join(", "),
           image: album.images[0].url,
         }
       });
@@ -28,7 +28,7 @@ export default {
       return {
         id: album.id,
         name: album.name,
-        artist: album.artists[0].name,
+        artist: album.artists.map((artist: any) => artist.name).join(", "),
         image: album.images[0].url,
       }
     },

@@ -3,8 +3,8 @@
   <TopBar />
 
   <div class="flex justify-center">
-    <div class="w-2/3 bg-gray-800 pt-7">
-      <RouterView v-once :key="$route.fullPath" />
+    <div class="lg:w-2/3 bg-gray-800" v-if="$route.fullPath">
+      <RouterView :key="$route.fullPath" />
     </div>
   </div>
 
@@ -19,7 +19,8 @@ import TopBar from '@/components/TopBar.vue'
 <style>
 
 body {
-  background-color: #374151;  
+  background-color: #374151; 
+  min-width: 880px;
 }
 
 /* div {
