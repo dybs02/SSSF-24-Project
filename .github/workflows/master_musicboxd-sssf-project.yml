@@ -56,8 +56,9 @@ jobs:
           name: node-app
 
       - name: List directory contents
-        run: ls -la
-        run: ls -la ./web
+        run: |
+          ls -la
+          ls -la ./web
 
       - name: Unzip artifact for deployment
         # working-directory: ./web
