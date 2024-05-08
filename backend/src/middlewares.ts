@@ -27,8 +27,7 @@ const errorHandler = (
 
 const authenticate = async (
   req: Request,
-  res: Response,
-  token: string
+  res: Response
 ) => {
   // res.locals.user = {
   //   _id: '662e369a71a91357d5607cd6',
@@ -40,6 +39,12 @@ const authenticate = async (
   // } as UserOutput;
   // return;
   try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      throw new Error('No authorization header provided');
+    }
+
+    const token = authHeader.split(' ')[1];
     if (!token) {
       throw new Error('No jwt provided');
     }

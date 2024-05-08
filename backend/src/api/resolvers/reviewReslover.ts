@@ -45,7 +45,7 @@ export default {
       args: { album_id: string },
       context: any
     ): Promise<Review> => {
-      await authenticate(context.req, context.res, context.jwt);
+      await authenticate(context.req, context.res);
       const review = await reviewModel.findOne({album_id: args.album_id, author: context.res.locals.user._id})
       .populate({
         path: 'comments',
@@ -153,7 +153,7 @@ export default {
       args: { limit: number },
       context: any,
     ): Promise<Review[]> => {
-      await authenticate(context.req, context.res, context.jwt);
+      await authenticate(context.req, context.res);
       const reviews = await reviewModel.find({ author: context.res.locals.user._id })
       .sort({ _id: -1 })
       .limit(args.limit > 10 ? 10 : args.limit)
@@ -193,7 +193,7 @@ export default {
       args: { album_id: string, title: string, content: string, rating: number },
       context: any
     ): Promise<Review> => {
-      await authenticate(context.req, context.res, context.jwt);
+      await authenticate(context.req, context.res);
 
       const review = await reviewModel.create({
         author: context.res.locals.user._id,
@@ -229,7 +229,7 @@ export default {
       args: { review_id: string, content: string },
       context: any
     ): Promise<ReviewComment> => {
-      await authenticate(context.req, context.res, context.jwt);
+      await authenticate(context.req, context.res);
 
       // TODO sanitize content ???
       const comment = await reviewCommentModel.create({
@@ -269,7 +269,7 @@ export default {
       args: { title: string, content: string, rating: number, id: string },
       context: any
     ): Promise<Review> => {
-      await authenticate(context.req, context.res, context.jwt);
+      await authenticate(context.req, context.res);
       const review = await reviewModel.findById(args.id);
       if (!review) {
         throw new Error('Review not found');
@@ -308,7 +308,7 @@ export default {
       args: { id: string },
       context: any
     ): Promise<Review> => {
-      await authenticate(context.req, context.res, context.jwt);
+      await authenticate(context.req, context.res);
       const review = await reviewModel.findById(args.id);
       if (!review) {
         throw new Error('Review not found');

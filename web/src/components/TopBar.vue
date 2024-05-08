@@ -41,10 +41,6 @@ const logout_url = import.meta.env.VITE_AUTH_URL + '/api/v1/auth/logout';
 
 const logout = async () => {
   store.clearStorage();
-  const res = await axios.get(
-    logout_url,
-    { withCredentials: true }
-  );
 }
 </script>
 

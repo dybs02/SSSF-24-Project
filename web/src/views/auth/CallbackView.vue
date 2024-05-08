@@ -15,6 +15,9 @@ import { onMounted } from 'vue';
 const store = useAuthStore();
 
 onMounted(() => {
+  const token = document.cookie.split('=')[1];
+  store.setToken(token);
+
   const query = `
   query {
     userCurrent {
@@ -27,12 +30,16 @@ onMounted(() => {
     }
   }
   `;
-  
-  axios.post(
-    import.meta.env.VITE_BACKEND_URL + '/graphql',
-    { query: query },
-    { withCredentials: true }
-  )
+
+  axios({
+    method: 'post',
+    url: import.meta.env.VITE_BACKEND_URL + '/graphql',
+    data: { query: query },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  })
   .then((response) => {
     const user = response.data.data.userCurrent;
     if (!user) {

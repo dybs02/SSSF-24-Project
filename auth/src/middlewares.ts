@@ -46,19 +46,20 @@ const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    const jwtCookie = req.cookies.jwt;
-    if (!jwtCookie) {
-      next(new CustomError('No jwt provided', 401));
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      next(new CustomError('No auth header provided', 401));
       return;
     }
-
+    
     if (!process.env.JWT_SECRET) {
       next(new CustomError('JWT secret not set', 500));
       return;
     }
-
+    
+    const token = authHeader.split(' ')[1];
     const tokenContent = jwt.verify(
-      jwtCookie,
+      token,
       process.env.JWT_SECRET
     ) as UserOutput;
 

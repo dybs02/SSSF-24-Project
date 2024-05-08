@@ -3,12 +3,13 @@ import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 import { DefaultApolloClient } from '@vue/apollo-composable'
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client/core';
+import { ApolloClient, ApolloLink, InMemoryCache, concat, createHttpLink } from '@apollo/client/core';
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import { useAuthStore } from './stores/authStore'
 
 
 const httpLink = createHttpLink({
@@ -16,8 +17,19 @@ const httpLink = createHttpLink({
   credentials: 'include',
 });
 
+const authMiddleware = new ApolloLink((operation, forward) => {
+  const store = useAuthStore();
+  const token = store.getToken();
+  operation.setContext({
+    headers: {
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  });
+  return forward(operation);
+});
+
 const apolloClient = new ApolloClient({
-  link: httpLink,
+  link: concat(authMiddleware, httpLink),
   cache: new InMemoryCache(),
 });
 

@@ -10,7 +10,7 @@ export default {
       _args: any, 
       context: any
     ): Promise<User> => {
-      await authenticate(context.req, context.res, context.jwt);
+      await authenticate(context.req, context.res);
       const user = await userModel.findById(context.res.locals.user._id);
       if (!user) {
         throw new Error('User not found');
