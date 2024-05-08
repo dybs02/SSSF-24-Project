@@ -134,7 +134,7 @@ const callback = async (
   
       // TODO set normal expiration time + refresh token
       // res.cookie('jwt', token, { httpOnly: true, secure: true, maxAge: 7*24*60*60*1000 });
-      res.cookie('jwt', token, { secure: true, sameSite: "none", domain: process.env.COOKIE_DOMAIN , maxAge: 7*24*60*60*1000 });
+      res.cookie('jwt', token, { httpOnly: false, secure: true, sameSite: "none", maxAge: 7*24*60*60*1000 });
       res.redirect(FRONTEND_URL + '/auth-callback');
     });
   });
