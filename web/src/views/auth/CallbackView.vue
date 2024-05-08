@@ -29,8 +29,7 @@ onMounted(() => {
   `;
   
   axios.post(
-    // TODO env variable
-    'http://localhost:3000/graphql',
+    import.meta.env.VITE_BACKEND_URL + '/graphql',
     { query: query },
     { withCredentials: true }
   )

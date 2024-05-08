@@ -11,7 +11,7 @@
             <a @click="logout" href="/">LOGOUT</a>
           </div>
           <div v-else>
-            <a href="http://localhost:3001/api/v1/auth/login/spotify">LOGIN</a>
+            <a :href="login_url">LOGIN</a>
           </div>
         </div>
         <div class="text-white">
@@ -36,12 +36,15 @@ import axios from 'axios';
 
 const store = useAuthStore();
 
+const login_url = import.meta.env.VITE_AUTH_URL + '/api/v1/auth/login/spotify';
+const logout_url = import.meta.env.VITE_AUTH_URL + '/api/v1/auth/logout';
+
 const logout = async () => {
-  const res = await axios.get(
-    'http://localhost:3001/api/v1/auth/logout',
-    { withCredentials: true }
-  )
   store.clearStorage();
+  const res = await axios.get(
+    logout_url,
+    { withCredentials: true }
+  );
 }
 </script>
 
