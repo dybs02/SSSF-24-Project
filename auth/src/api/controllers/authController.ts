@@ -133,7 +133,8 @@ const callback = async (
       const token = jwt.sign(tokenContent, JWT_SECRET!);
   
       // TODO set normal expiration time + refresh token
-      res.cookie('jwt', token, { httpOnly: true, secure: true, maxAge: 7*24*60*60*1000 });
+      // res.cookie('jwt', token, { httpOnly: true, secure: true, maxAge: 7*24*60*60*1000 });
+      res.cookie('jwt', token, { maxAge: 7*24*60*60*1000 });
       res.redirect(FRONTEND_URL + '/auth-callback');
     });
   });
