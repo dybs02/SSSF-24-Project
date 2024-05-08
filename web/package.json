@@ -10,6 +10,10 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force"
   },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=8.19.4"
+  },
   "dependencies": {
     "@apollo/client": "^3.10.1",
     "@vue/apollo-composable": "^4.0.2",
