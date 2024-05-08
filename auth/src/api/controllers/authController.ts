@@ -132,7 +132,7 @@ const callback = async (
   
       const token = jwt.sign(tokenContent, JWT_SECRET!);
   
-      res.cookie('jwt', token);
+      res.cookie('jwt', token, { domain: process.env.COOKIE_DOMAIN, secure: true, sameSite: 'none' });
       res.redirect(FRONTEND_URL + '/auth-callback');
     });
   });
