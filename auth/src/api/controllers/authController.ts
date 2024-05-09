@@ -122,6 +122,8 @@ const callback = async (
       }
   
       const state = generateRandomString(16);
+      res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL!);
+      res.header('Access-Control-Allow-Credentials', 'true');
       res.cookie('state', state, { httpOnly: true });
       res.cookie('id', user._id, { httpOnly: true });
       res.redirect(FRONTEND_URL + `/auth-callback?state=${state}`);
@@ -136,6 +138,8 @@ const getJWT = async (
 ) => {
   const state = req.query.state || null;
   const storedState = req.cookies ? req.cookies['state'] : null;
+  res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL!);
+  res.header('Access-Control-Allow-Credentials', 'true');
   if (state === null || state !== storedState) {
     res.redirect(FRONTEND_URL + '/error' +
       querystring.stringify({ message: 'state mismatch' })
