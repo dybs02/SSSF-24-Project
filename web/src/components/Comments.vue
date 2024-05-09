@@ -9,10 +9,10 @@
     <div class="flex">
       <div class="flex w-48">
         <div class="rounded-full overflow-hidden flex-none h-12 w-12">
-          <img :src="c.author.avatar_url" alt="User avatar" class="object-cover w-full h-full" />
+          <img :src="c.author.avatar_url" alt="User avatar" class="object-cover w-full h-full hover:cursor-pointer" @click="openProfile(c.author._id)" />
         </div>
         <div class="ml-4 flex-none w-36 overflow-hidden">
-          <div class="text-lg font-bold">{{ c.author.display_name }}</div>
+          <div class="text-lg font-bold hover:cursor-pointer" @click="openProfile(c.author._id)">{{ c.author.display_name }}</div>
           <div class="text-xs text-gray-400">{{ (new Date(c.date)).toLocaleDateString("en-GB") }}</div>
           <div class="text-xs text-gray-400">{{ (new Date(c.date)).toLocaleTimeString("en-GB") }}</div>
         </div>
@@ -48,6 +48,7 @@ import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useQuery, useMutation } from '@vue/apollo-composable'
 import { gql } from "@apollo/client/core";
+import router from '@/router';
 
 
 type Comment = {
@@ -99,6 +100,10 @@ const submit = () => {
     comments_cpy.value.push(result.data.createReviewComment);
   })
 };
+
+const openProfile = (user_id: string) => {
+  router.push({ name: 'user', params: { id: user_id } });
+}
 
 </script>
 

@@ -46,7 +46,7 @@ type Query {
   reviewsByAlbumId(album_id: String!): [Review]
   reviewsByUserId(user_id: ID!): [Review]
   reviewsMostRecent(limit: Int!): [ReviewWithAlbum]
-  reviewsMostRecentCurrnetUser(limit: Int!): [ReviewWithAlbum]
+  reviewsMostRecentByUserId(user_id: ID!, limit: Int!): [ReviewWithAlbum]
 }
 
 type Mutation {

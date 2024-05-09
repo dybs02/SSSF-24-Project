@@ -21,9 +21,16 @@ import { useQuery } from '@vue/apollo-composable'
 import { gql } from "@apollo/client/core";
 import { computed, ref } from 'vue';
 
+const props = defineProps({
+  user_id: {
+    type: String,
+    required: true
+  }
+});
+
 const { result } = useQuery(gql`
-  query ReviewsMostRecentCurrnetUser($limit: Int!) {
-    reviewsMostRecentCurrnetUser(limit: $limit) {
+  query ReviewsMostRecentByUserId($userId: ID!, $limit: Int!) {
+    reviewsMostRecentByUserId(user_id: $userId, limit: $limit) {
       author {
         _id
         avatar_url
@@ -40,11 +47,12 @@ const { result } = useQuery(gql`
     }
   }
 `, {
+  userId: props.user_id,
   limit: 4
 }, {
   fetchPolicy: 'no-cache'
 })
-const reviews = computed(() => result.value?.reviewsMostRecentCurrnetUser ?? []);
+const reviews = computed(() => result.value?.reviewsMostRecentByUserId ?? []);
 
 </script>
 

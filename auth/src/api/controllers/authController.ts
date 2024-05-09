@@ -109,10 +109,11 @@ const callback = async (
 
     request.get(options, async function(error, response, body) {
       let user = await userModel.findOne({ spotify_id: body.id });
+      console.log(body);
       if (!user) {
         user = await userModel.create({
           display_name: body.display_name,
-          avatar_url: body.images[1].url,
+          avatar_url: body.images.length === 0 ? 'https://picsum.photos/300' : body.images[1].url,
           spotify_id: body.id,
           email: body.email,
           country: body.country,

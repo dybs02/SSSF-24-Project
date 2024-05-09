@@ -17,8 +17,8 @@
         <div class="text-white">
           <a href="/">Home</a>
         </div>
-        <div class="text-white">
-          <a href="/user/123">Profile</a>
+        <div class="text-white hover:cursor-pointer">
+          <a @click="openProfile">Profile</a>
         </div>
       </div>
       <div class="flex-1 md:max-w-lg">
@@ -32,16 +32,21 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/authStore';
 import SearchBar from './SearchBar.vue'
-import axios from 'axios';
+import router from '@/router';
 
 const store = useAuthStore();
 
 const login_url = import.meta.env.VITE_AUTH_URL + '/api/v1/auth/login/spotify';
-const logout_url = import.meta.env.VITE_AUTH_URL + '/api/v1/auth/logout';
 
 const logout = async () => {
   store.clearStorage();
 }
+
+const openProfile = () => {
+  const user_id = store.getUser()?._id;
+  router.push({ name: 'user', params: { id: user_id } });
+}
+
 </script>
 
 <style scoped>

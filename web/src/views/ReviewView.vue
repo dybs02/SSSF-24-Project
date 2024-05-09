@@ -28,7 +28,7 @@
               readonly
             ></v-rating>
           </div>
-          <div class="flex">
+          <div class="flex hover:cursor-pointer" @click="openProfile">
             <div>
               <img :src="review.author.avatar_url" alt="User avatar" class="w-8 h-8 rounded-full" />
             </div>
@@ -51,7 +51,7 @@
         </div>
       </div>
 
-      <div class="pt-2">
+      <div class="pt-2" v-if="isEditable">
         <v-btn
           @click="editReview"
           variant="tonal"
@@ -72,7 +72,9 @@ import { gql } from "@apollo/client/core";
 import { computed, ref } from 'vue';
 import Comments from "@/components/Comments.vue";
 import router from '@/router';
+import { useAuthStore } from '@/stores/authStore';
 
+const store = useAuthStore();
 const route = useRoute();
 const { result: reviewResult } = useQuery(gql`
   query ReviewById($reviewByIdId: ID!) {
@@ -114,6 +116,15 @@ const review = computed(() => reviewResult.value?.reviewById ?? {});
 
 const editReview = () => {
   router.push({ name: 'album', params: { id: review.value.album_id }, query: { _r: Date.now() } })
+}
+
+const isEditable = computed(() => {
+  const user = store.getUser();
+  return user?._id === review.value.author._id;
+})
+
+const openProfile = () => {
+  router.push({ name: 'user', params: { id: review.value.author._id } });
 }
 
 </script>

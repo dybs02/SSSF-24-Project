@@ -148,13 +148,12 @@ export default {
 
       return reviews;
     },
-    reviewsMostRecentCurrnetUser: async (
+    reviewsMostRecentByUserId: async (
       _parent: undefined,
-      args: { limit: number },
+      args: { user_id: string, limit: number },
       context: any,
     ): Promise<Review[]> => {
-      await authenticate(context.req, context.res);
-      const reviews = await reviewModel.find({ author: context.res.locals.user._id })
+      const reviews = await reviewModel.find({ author: args.user_id })
       .sort({ _id: -1 })
       .limit(args.limit > 10 ? 10 : args.limit)
       .populate({
