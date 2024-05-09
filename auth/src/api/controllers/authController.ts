@@ -126,6 +126,12 @@ const callback = async (
       res.header('Access-Control-Allow-Credentials', 'true');
       res.cookie('state', state, { httpOnly: true, domain: process.env.COOKIE_DOMAIN});
       res.cookie('id', user._id, { httpOnly: true });
+      res.cookie('state2', state, { domain: process.env.COOKIE_DOMAIN});
+      res.cookie('id2', user._id);
+      res.cookie('state3', state, { httpOnly: true, secure: true, sameSite: 'none', domain: process.env.COOKIE_DOMAIN});
+      res.cookie('id3', user._id, { httpOnly: true, secure: true, sameSite: 'none' });
+      res.cookie('state2', state, { domain: 'https://musicboxd-sssf-auth.azurewebsites.net'});
+      res.cookie('id2', user._id, { domain: 'musicboxd-sssf-auth.azurewebsites.net'});
       res.redirect(FRONTEND_URL + `/auth-callback?state=${state}`);
     });
   });
@@ -138,7 +144,7 @@ const getJWT = async (
 ) => {
   const state = req.query.state || null;
   const storedState = req.cookies ? req.cookies['state'] : null;
-  res.header('Access-Control-Allow-Origin', process.env.AUTH_URL!);
+  res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL!);
   res.header('Access-Control-Allow-Credentials', 'true');
   console.log('cookies', req.cookies);
   if (state === null || state !== storedState) {
