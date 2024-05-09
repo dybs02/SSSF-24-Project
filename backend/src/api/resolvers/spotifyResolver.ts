@@ -1,3 +1,4 @@
+import { authenticate } from '../../middlewares';
 import { getAlbumById, getAlbumsByQuery } from '../../utils/spotify';
 
 export default {
@@ -5,7 +6,9 @@ export default {
     spotifyAlbumsByQuery: async (
       _parent: undefined,
       args: { query: string },
+      context: any
     ) => {
+      await authenticate(context.req, context.res);
       const response = await getAlbumsByQuery(args.query);
 
       return response.data.albums.items.map((album: any) => {

@@ -69,7 +69,9 @@ export default {
     reviewsByAlbumId: async (
       _parent: undefined,
       args: { album_id: string },
+      context: any
     ): Promise<Review[]> => {
+      await authenticate(context.req, context.res);
       const reviews = await reviewModel.find({album_id: args.album_id})
       .populate({
         path: 'comments',
@@ -153,6 +155,7 @@ export default {
       args: { user_id: string, limit: number },
       context: any,
     ): Promise<Review[]> => {
+      await authenticate(context.req, context.res);
       const reviews = await reviewModel.find({ author: args.user_id })
       .sort({ _id: -1 })
       .limit(args.limit > 10 ? 10 : args.limit)
