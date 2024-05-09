@@ -6,8 +6,14 @@ import { UserOutput } from '../src/interfaces/User';
 
 import {getNotFound} from './testFunctions';
 import {
-  postReview
+  deleteReview,
+  postReview,
+  postReviewComment,
+  updateReview,
 } from './reviewFunctions';
+import { Review } from '../src/interfaces/Review';
+import reviewModel from '../src/api/models/reviewModel';
+import reviewCommentModel from '../src/api/models/reviewCommentModel';
 
 
 const generateJWT = async () => {
@@ -36,6 +42,8 @@ describe('Testing graphql api', () => {
 
   beforeAll(async () => {
     await mongoose.connect(process.env.TEST_DATABASE_URL as string);
+    reviewModel.deleteMany({}).exec();
+    reviewCommentModel.deleteMany({}).exec();
     token = await generateJWT() as string;
   });
 
@@ -43,12 +51,15 @@ describe('Testing graphql api', () => {
     await mongoose.connection.close();
   });
 
+  let review: Partial<Review>;
+
+
   it('responds with a not found message', async () => {
     await getNotFound(app);
   });
 
   it('should create a new review', async () => {
-    await postReview(
+    review = await postReview(
       app,
       {
         albumId: '02w1xMzzdF2OJxTeh1basm',
@@ -58,6 +69,34 @@ describe('Testing graphql api', () => {
       },
       token
     );
+  });
+
+  it('should create a review comment', async () => {
+    const reviewComment = await postReviewComment(
+      app,
+      {
+        reviewId: review.id,
+        content: 'Comment content',
+      },
+      token
+    );
+  });
+
+  it('should update a review', async () => {
+    review = await updateReview(
+      app,
+      {
+        updateReviewId: review.id,
+        title: 'Review title - updated',
+        content: 'Review content - updated',
+        rating: 2.5,
+      },
+      token
+    );
+  });
+
+  it('should delete a review', async () => {
+    await deleteReview(app, {deleteReviewId: review.id}, token);
   });
 
 });
