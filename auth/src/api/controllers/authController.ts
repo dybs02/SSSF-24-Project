@@ -120,23 +120,46 @@ const callback = async (
           refresh_token: refresh_token
         });
       }
-
-      const tokenContent: UserOutput = {
-        _id: user._id,
-        email: user.email,
-        display_name: user.display_name,
-        avatar_url: user.avatar_url,
-        spotify_id: user.spotify_id,
-        country: user.country,
-      };
   
-      const token = jwt.sign(tokenContent, JWT_SECRET!);
-  
-      res.cookie('jwt', token, { domain: process.env.COOKIE_DOMAIN, secure: true, sameSite: 'none' });
-      res.redirect(FRONTEND_URL + '/auth-callback');
+      const state = generateRandomString(16);
+      res.cookie('state', state, { httpOnly: true });
+      res.cookie('id', user._id, { httpOnly: true });
+      res.redirect(FRONTEND_URL + `/auth-callback?state=${state}`);
     });
   });
 }
 
+const getJWT = async (
+  req: Request<{}, {}, {}>,
+  res: Response,
+  next: NextFunction
+) => {
+  const state = req.query.state || null;
+  const storedState = req.cookies ? req.cookies['state'] : null;
+  if (state === null || state !== storedState) {
+    res.redirect(FRONTEND_URL + '/error' +
+      querystring.stringify({ message: 'state mismatch' })
+    );
+    return;
+  }
 
-export {login, logout, callback};
+  const user = await userModel.findById(req.cookies.id).select('-__v -access_token -refresh_token');
+  if (!user) {
+    throw new CustomError('User not found', 404);
+  }
+
+  const tokenContent: UserOutput = {
+    _id: user._id,
+    email: user.email,
+    display_name: user.display_name,
+    avatar_url: user.avatar_url,
+    spotify_id: user.spotify_id,
+    country: user.country,
+  };
+  const token = jwt.sign(tokenContent, JWT_SECRET!);
+
+  res.json({ jwt: token, user: tokenContent });
+}
+
+
+export {login, logout, callback, getJWT};

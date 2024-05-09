@@ -15,42 +15,28 @@ import { onMounted } from 'vue';
 const store = useAuthStore();
 
 onMounted(() => {
-  const token = document.cookie.split('=')[1];
-  store.setToken(token);
-
-  const query = `
-  query {
-    userCurrent {
-      _id
-      display_name
-      avatar_url
-      spotify_id
-      email
-      country
-    }
-  }
-  `;
-
   axios({
-    method: 'post',
-    url: import.meta.env.VITE_BACKEND_URL + '/graphql',
-    data: { query: query },
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+    method: 'get',
+    url: import.meta.env.VITE_AUTH_URL + '/api/v1/auth/jwt',
+    withCredentials: true,
+    params: {
+      state: (new URLSearchParams(window.location.search)).get('state'),
     },
   })
   .then((response) => {
-    const user = response.data.data.userCurrent;
-    if (!user) {
+    const user = response.data.user;
+    const token = response.data.jwt;
+
+    if (!user || !token) {
       store.clearStorage();
-      console.error('No user found');
+      console.error('No data found');
       return;
     }
     store.setUser(user);
+    store.setToken(token);
   })
   .catch((error) => {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching jwt:', error);
   });
 
   router.push('/');
