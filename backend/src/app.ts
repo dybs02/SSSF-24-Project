@@ -47,6 +47,7 @@ const requestLogger = {
           requestLogger
       ],
       includeStacktraceInErrorResponses: false,
+      introspection: true,
     });
     await server.start();
 
