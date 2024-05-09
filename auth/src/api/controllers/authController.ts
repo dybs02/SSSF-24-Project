@@ -124,14 +124,8 @@ const callback = async (
       const state = generateRandomString(16);
       res.header('Access-Control-Allow-Origin', process.env.AUTH_URL!);
       res.header('Access-Control-Allow-Credentials', 'true');
-      res.cookie('state', state, { httpOnly: true, domain: process.env.COOKIE_DOMAIN});
-      res.cookie('id', user._id, { httpOnly: true });
-      res.cookie('state2', state, { domain: process.env.COOKIE_DOMAIN});
-      res.cookie('id2', user._id);
-      res.cookie('state3', state, { httpOnly: true, secure: true, sameSite: 'none', domain: process.env.COOKIE_DOMAIN});
-      res.cookie('id3', user._id, { httpOnly: true, secure: true, sameSite: 'none' });
-      res.cookie('state2', state, { domain: 'https://musicboxd-sssf-auth.azurewebsites.net'});
-      res.cookie('id2', user._id, { domain: 'musicboxd-sssf-auth.azurewebsites.net'});
+      res.cookie('state', state, { httpOnly: true, secure: true, sameSite: 'none' });
+      res.cookie('id', user._id, { httpOnly: true, secure: true, sameSite: 'none' });
       res.redirect(FRONTEND_URL + `/auth-callback?state=${state}`);
     });
   });
