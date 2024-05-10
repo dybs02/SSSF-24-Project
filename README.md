@@ -5,9 +5,10 @@ A web application that will allow users to review, rate and comment music, simil
 
 This will be achived with the help of [Spotify API](https://developer.spotify.com/documentation/web-api). Users will be able to post content after loging in, authentication will be done with a Spotify account.
 
-**For testing please email you email that you used for spotify account, so that it can be added to whitelisted used, since app is in development mode.**
+**For testing please email your email that you used for spotify account, so that it can be added to whitelisted used, since app is in development mode. Alternatively you can use my test spotify account with credentials:**
 
-- **mateusz.dybala@metropolia.fi**
+- **Email:** mateusz.dybala@metropolia.fi
+- **Passowrd:** test&password
 
 ### Frontend
 A simple SPA made with [Vue](https://vuejs.org/) and following components:
